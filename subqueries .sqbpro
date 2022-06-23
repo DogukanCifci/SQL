@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/dogukan/Desktop/CLARUSWAY/DERSLER/SQL/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure pragmas browser query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3839"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainalbums"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="56"/><column index="2" value="300"/><column index="3" value="50"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SINGLE ROW SUBQUERIES">/*--------------------------------FORMAT----------------------------*/
+
+/*Find the employees who get paid more than Rodneey Weawer */
+
+SELECT employer_id, first_name, last_name, salary FROM employees WHERE salary &gt; 
+																																(SELECT salary FROM employees WHERE first_name == &quot;Rodney&quot; AND last_name = &quot;Weawer&quot;) ;
+																																
+
+/*Find out the employees who get paid more than average salary */
+SELECT FirstName, last_name FROM employees WHERE salary &gt; (SELECT AVG(salary) FROM employees) ;
+
+
+/*Retrieve the track id, track name, album id info of the Album Title 'Faceless' */
+
+
+/* -----------------------------------------1. METHOD WITH INNER JOIN -----------------------------------------*/
+SELECT tracks.TrackId, tracks.name, tracks.AlbumId FROM tracks INNER JOIN albums on tracks.AlbumId=albums.AlbumId WHERE Title =&quot; Faceless&quot; ; /* olmaidi ???? */
+
+/* -----------------------------------------2. METHOD WITH SUBQUERIES -----------------------------------------*/
+SELECT TrackId, name, AlbumId FROM tracks WHERE AlbumId =			/* = KULLANDIM CÜNKÜ BIR SONRAKI PARANTEZ ICINDEN GELEN SONUC TEK. EGER BIRDEN FAZLA SONUC GELSEYDI IN KULLANIRDIM. AMA BURADA DA IN KULLANABILIRIM*/
+																								(SELECT AlbumId FROM albums WHERE Title=&quot;Faceless&quot;) ;
+
+ </sql><sql name="MULTIPLE ROWS SUBQUERIES">/* -----------------------------------------FORMAT -----------------------------------------*/
+/*Find the employees (first_name, last name from employees table) who work under THE Operations department(department table) */
+
+/*----------------------------------------------1. METHOD WITH MULTIPLE LINE SUBQUERIES ---------------------- */
+SELECT first_name, last_name FROM employees WHERE emp_Id IN 
+																													(SELECT emp_Id FROM department WHERE dept_name = 'Operations' ) ; /*Buranin degeri birden fazla ciktigi icin IN ile bagladik.Tek deger olsaydi &quot;=&quot; IN yerine koyabilirdik */
+																													
+/*----------------------------------------------2. method with inner JOIN ---------------------- */
+SELECT employees.first_name, employees.last_name FROM employees INNER JOIN departments on employees.emp_id=department.emp_id WHERE dept_name = &quot;Operations&quot; ; 
+
+
+/*Retrieve track_id, track_name, album id info of the Album title 'Faceless' and 'Let there be Rock */
+
+SELECT TrackId, name, AlbumId FROM tracks WHERE AlbumId IN 
+																											(SELECT AlbumId FROM albums WHERE Title = &quot;Faceless&quot; OR Title = &quot;Let There Be Rock&quot;) ;
+																											
+																											
+																											</sql><current_tab id="1"/></tab_sql></sqlb_project>
