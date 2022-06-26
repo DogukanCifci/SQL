@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/dogukan/Desktop/CLARUSWAY/DERSLER/SQL/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure pragmas browser query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3839"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:maintracks"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="56"/><column index="2" value="300"/><column index="3" value="50"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="customers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="75"/><column index="2" value="69"/><column index="3" value="82"/><column index="4" value="279"/><column index="5" value="256"/><column index="6" value="132"/><column index="7" value="45"/><column index="8" value="97"/><column index="9" value="76"/><column index="10" value="121"/><column index="11" value="117"/><column index="12" value="176"/><column index="13" value="88"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="invoices" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="60"/><column index="2" value="75"/><column index="3" value="123"/><column index="4" value="256"/><column index="5" value="132"/><column index="6" value="74"/><column index="7" value="97"/><column index="8" value="111"/><column index="9" value="42"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="tracks" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="50"/><column index="2" value="300"/><column index="3" value="56"/><column index="4" value="80"/><column index="5" value="54"/><column index="6" value="300"/><column index="7" value="80"/><column index="8" value="65"/><column index="9" value="61"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="1">/*1. -----&gt;*/				SELECT name, Composer FROM tracks ;
+
+/*2. ------&gt;*/				SELECT * FROM tracks ;
+
+
+/*3. ------&gt; */				SELECT  Composer FROM tracks ;
+
+/*4.-------&gt; */ 			SELECT DISTINCT AlbumId, MediaTypeId FROM tracks ;
+
+/*5.--------&gt; */ 			SELECT TrackId, name, Composer FROM tracks WHERE Composer=&quot;Jorge Ben&quot; ;
+
+
+
+</sql><sql name="2">/*6.--------&gt; */ 			SELECT * FROM invoices WHERE total  &gt; 25 ;
+
+/*7.------&gt;*/ 				SELECT *  FROM invoices WHERE total &lt;15 LIMIT 5;
+
+/*8.--------&gt; */ 			SELECT * FROM invoices WHERE total &gt; 10 ORDER BY total DESC LIMIT 2 ;
+
+/*9--------&gt;*/ 			SELECT * FROM invoices WHERE NOT BillingCountry = &quot;Canada&quot;  ORDER By total ASC LIMIT 10 ; 
+
+/*10.--------&gt;*/			SELECT InvoiceId, CustomerId, total FROM invoices ORDER BY CustomerId ASC , TOTAL DESC ;			/*Önce customerId ye göre siralar. sonra customer idler ayni olanlar icinde total amounta göre br daha siralama olur.*/
+
+</sql><sql name="3">/*11.---------&gt;*/			SELECT 	Name FROM tracks WHERE NAME LIKE  'B%S';		/*B HARFI ILE BASLAYIP S HARFI ILE BITEN */
+
+/*12.------&gt;*/ 			SELECT InvoiceDate FROM invoices WHERE InvoiceDate BETWEEN '2007-12-31' And  '2012-01-01'  ORDER BY InvoiceDate DESC LIMIT 1;
+
+/*13-----&gt;*/				SELECT FirstName, LastName FROM customers WHERE Country IN('Norway', 'Belgium');
+
+/*14. ------&gt;*/ 			SELECT name, Composer FROM tracks WHERE Composer LIKE '%ZAPPA%' ; /*Composer sutununda icierisinde zappa yi barindiranlarin tracknamelerini getir. Iyi gorebilmek icin composerlarida yazrdirdik */
+
+/*15.-------&gt;*/			SELECT  COUNT(tracks.TrackId) AS NUMBER_OF_TRACKID, COUNT(invoices.InvoiceId) AS NUMBER_OF_INVOICEID FROM tracks INNER JOIN invoice_items ON invoice_items.TrackId=tracks.TrackId 
+																											INNER JOIN invoices ON invoices.InvoiceId=invoice_items.InvoiceId;			/*BURDA SAYI FARKLI CIKTI DERSTE INCELE*/ 
+																											
+SELECT COUNT(InvoiceId) FROM invoices ;
+SELECT COUNT(tracks.TrackId) from tracks;
+
+
+</sql><sql name="4">/*16-------&gt;*/					SELECT COUNT(DISTINCT Composer) FROM tracks;
+
+/*17.-------&gt; */ 				SELECT  tracks.AlbumId, COUNT(TrackId) AS total_track_numbers FROM tracks INNER join albums ON tracks.AlbumId=albums.AlbumId
+																																				GROUP BY tracks.AlbumId ORDER BY total_track_numbers DESC;
+																																				
+
+/*18.-------&gt;*/				SELECT name,Milliseconds FROM tracks WHERE Milliseconds = 
+																														(SELECT MAX(Milliseconds) FROM tracks) ;
+																														
+																														
+/*18.-------&gt;*/				SELECT name, Milliseconds FROM tracks WHERE Milliseconds =
+																																		(SELECT MIN(Milliseconds) FROM tracks) ;
+																																		
+																																		
+/*19.------&gt; */ 			SELECT	* FROM tracks WHERE Milliseconds &lt;
+																										(SELECT AVG(Milliseconds) FROM tracks) ;
+																																		
+
+/*20.-------&gt;*/			SELECT Composer, count(TrackId) AS TOTAL_TRACK_NUMBERS_OF_EACH_COMPOSERS FROM tracks GROUP BY Composer ;	
+																																		
+																													
+
+
+</sql><sql name="5">/*-----------------21.--------------- */			
+
+SELECT tracks.name, genres.name FROM genres INNER JOIN tracks ON tracks.GenreId=genres.GenreId ;
+
+/*EXTRA*/
+SELECT count(tracks.name) AS total_numbers, genres.name FROM genres INNER JOIN tracks ON tracks.GenreId=genres.GenreId GROUP BY genres.name ORDER BY  total_numbers DESC;
+
+
+/*-----------------22.--------------- */			
+
+SELECT artists.ArtistId,artists.name, albums.AlbumId, albums.Title FROM albums INNER JOIN artists ON albums.ArtistId=artists.ArtistId ;
+
+
+/*23.WRITE A QUERY THAT RETURNS THE MINIMUM DURATION OF THE TRACK IN EACH ALBUM. DISPLAY ALBUMID, ALBUM TITLE AND DURATION OF THE TRACK. THEN SORT THEM FROM HIGHEST TO LOWEST*/
+
+SELECT albums.albumid, albums.Title, tracks.Milliseconds FROM albums INNER JOIN tracks ON tracks.AlbumId=albums.AlbumId WHERE Milliseconds IN
+																																									(SELECT MIN(Milliseconds) FROM tracks GROUP BY AlbumId) ;																														
+																																									
+/* 24. WRITE A QUERY THAT RETURNS ALBUMS WHOSE TOTAL DURATION IS HIGHER THAN 60 MIN. DISPLAY ALBUM TITLE AND THEIR DURATIONS. THEN SORT THE RESULT FROM HIGHEST TO LOWEST */
+
+							/*BU KOD CALISMADI DERSTE SOR*/
+SELECT albums.AlbumId,albums.Title, SUM(tracks.Milliseconds) AS total_min FROM albums INNER JOIN tracks ON tracks.AlbumId= albums.AlbumId GROUP BY tracks.AlbumId  WHERE total_min &gt; 3600000;
+
+																										
+
+/*25. WRITE A QUERY THAT RETURNS TRACKID, TRACK NAME AND ALBUMID INFO OF THE ALBUM WHOSE TITLE ARE ‘Prenda Minha’, 'Heart of the Night' AND 'Out Of Exile'. */
+SELECT albums.Title,tracks.TrackId, tracks.Name,tracks.AlbumId, albums.ArtistId FROM tracks INNER JOIN albums ON albums.AlbumId=tracks.AlbumId WHERE Title IN  ( &quot;Prenda Minha&quot;,&quot;Out Of Exile&quot;, &quot;Heart of the Night&quot;) ;</sql><current_tab id="4"/></tab_sql></sqlb_project>
